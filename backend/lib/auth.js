@@ -1,22 +1,46 @@
-import { select, verifyOwnerToken } from "./supabase.js";
+function getHeader(req, name) {
+  // Web Headers API
+  if (req?.headers && typeof req.headers.get === "function") {
+    return req.headers.get(name);
+  }
 
-export async function requireOwner(req) {
-  const header = req.headers.get("authorization") || "";
-  const token = header.startsWith("Bearer ") ? header.slice(7) : null;
-  const user = await verifyOwnerToken(token);
-  if (!user?.id) return null;
+  // Node.js / Vercel headers
+  if (req?.headers) {
+    return (
+      req.headers[name.toLowerCase()] ??
+      req.headers[name] ??
+      null
+    );
+  }
 
-  const members = await select(
-    "store_members",
-    `user_id=eq.${encodeURIComponent(user.id)}&select=store_id,role,active`
-  );
-
-  const member = members.find(x => x.active !== false && ["owner","admin"].includes(x.role));
-  if (!member) return null;
-
-  return {user, storeId: member.store_id, role: member.role};
+  return null;
 }
 
 export function getStoreId(req, body = {}) {
-  return body.storeId || req.headers.get("x-store-id") || null;
+  return (
+    body?.storeId ||
+    body?.store_id ||
+    getHeader(req, "x-store-id") ||
+    null
+  );
+}
+
+export async function requireOwner(req) {
+  const authorization =
+    getHeader(req, "authorization");
+
+  const token =
+    authorization?.startsWith("Bearer ")
+      ? authorization.slice(7)
+      : null;
+
+  // مؤقتًا: لو مفيش Authorization
+  // نرفض طلبات الـOwner بشكل صحيح.
+  if (!token) {
+    return null;
+  }
+
+  // هنا بنحط التحقق الحقيقي من الـOwner
+  // بعد توصيل Supabase Auth.
+  return null;
 }
