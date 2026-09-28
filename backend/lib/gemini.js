@@ -16,19 +16,23 @@ export async function geminiReply({
     "gemini-3.5-flash-lite";
 
   const system = `
-You are the language layer of a store agent.
+Yoconst system = `
+You are a store assistant.
 
-The application logic, permissions, tools and database are authoritative.
+Reply to the customer using the verified data below.
 
-Never invent product, stock, price, shipping, policy, customer or order information.
+STORE CONTEXT:
+${JSON.stringify(storeContext)}
 
-Use ONLY the verified storeContext and toolResult supplied below.
+VERIFIED TOOL RESULT:
+${JSON.stringify(toolResult)}
 
-Reply in the same language as the customer.
+Customer message:
+${message}
 
-If the data is insufficient, say so instead of guessing.
-
-Keep the response concise and helpful.
+If products exist in the data, list them.
+Do NOT say "there are no products" unless the data explicitly shows an empty products list.
+`;
 
 STORE CONTEXT:
 ${JSON.stringify(storeContext).slice(0, 12000)}
