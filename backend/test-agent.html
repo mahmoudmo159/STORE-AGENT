@@ -1,273 +1,165 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Agent — Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Store Agent Test</title>
 
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
+      margin: 0;
       min-height: 100vh;
       background: #070b12;
-      color: #f5f7fb;
-      font-family: Inter, Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
+      color: #fff;
+      font-family: Arial, sans-serif;
     }
 
     .app {
       width: 100%;
       max-width: 850px;
-      height: 90vh;
-      max-height: 850px;
+      height: 100vh;
+      margin: auto;
       display: flex;
       flex-direction: column;
       background: #0c121c;
-      border: 1px solid #1d2938;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,.35);
     }
 
-    .header {
-      padding: 18px 20px;
+    header {
+      padding: 18px;
       border-bottom: 1px solid #1d2938;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 15px;
-    }
-
-    .brand {
-      display: flex;
       align-items: center;
-      gap: 12px;
-    }
-
-    .logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #4f8cff, #58d5ff);
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      color: #06101c;
     }
 
     .title {
-      font-size: 17px;
-      font-weight: 700;
+      font-size: 20px;
+      font-weight: bold;
     }
 
-    .subtitle {
-      color: #8190a5;
+    .sub {
+      color: #7f8da1;
       font-size: 12px;
-      margin-top: 3px;
+      margin-top: 5px;
     }
 
     .status {
-      display: flex;
-      align-items: center;
-      gap: 7px;
+      color: #55df9a;
       font-size: 12px;
-      color: #8d9aad;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      background: #55df9a;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(85,223,154,.7);
     }
 
     .messages {
       flex: 1;
       overflow-y: auto;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .welcome {
-      margin: auto;
-      text-align: center;
-      max-width: 500px;
-    }
-
-    .welcome h1 {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    .welcome p {
-      color: #8290a3;
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    .suggestions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 20px;
-    }
-
-    .suggestion {
-      border: 1px solid #263548;
-      background: #101925;
-      color: #b9c5d5;
-      border-radius: 999px;
-      padding: 9px 13px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .suggestion:hover {
-      border-color: #4f8cff;
-      color: white;
+      padding: 20px;
     }
 
     .message {
       display: flex;
-      gap: 10px;
-      max-width: 82%;
+      margin-bottom: 16px;
     }
 
-    .message.user {
-      margin-left: auto;
-      flex-direction: row-reverse;
+    .user {
+      justify-content: flex-start;
     }
 
-    .avatar {
-      width: 32px;
-      height: 32px;
-      min-width: 32px;
-      border-radius: 10px;
-      background: #182332;
-      display: grid;
-      place-items: center;
-      font-size: 13px;
-      font-weight: bold;
-    }
-
-    .user .avatar {
-      background: #315fae;
+    .agent {
+      justify-content: flex-end;
     }
 
     .bubble {
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: #111b29;
-      border: 1px solid #202e40;
-      line-height: 1.55;
-      font-size: 14px;
+      max-width: 85%;
+      padding: 13px 16px;
+      border-radius: 15px;
+      line-height: 1.7;
       white-space: pre-wrap;
       word-break: break-word;
+      font-size: 14px;
     }
 
     .user .bubble {
       background: #24509a;
-      border-color: #3165ba;
+    }
+
+    .agent .bubble {
+      background: #151e2c;
+      border: 1px solid #263548;
+    }
+
+    .error .bubble {
+      background: #35171b;
+      border: 1px solid #7f2933;
+      direction: ltr;
+      text-align: left;
     }
 
     .composer {
       padding: 14px;
       border-top: 1px solid #1d2938;
-      background: #0a1018;
-    }
-
-    .input-row {
       display: flex;
       gap: 10px;
-      align-items: flex-end;
+      background: #090e16;
     }
 
     textarea {
       flex: 1;
-      min-height: 48px;
+      min-height: 50px;
       max-height: 130px;
       resize: none;
       background: #101925;
-      border: 1px solid #263548;
       color: white;
-      border-radius: 14px;
-      padding: 14px;
+      border: 1px solid #263548;
+      border-radius: 13px;
+      padding: 13px;
+      font-size: 15px;
       outline: none;
-      font: inherit;
-      font-size: 14px;
     }
 
     textarea:focus {
       border-color: #4f8cff;
     }
 
-    button.send {
-      width: 48px;
-      height: 48px;
+    button {
+      width: 55px;
+      height: 50px;
       border: 0;
-      border-radius: 14px;
+      border-radius: 13px;
       background: #4f8cff;
       color: white;
+      font-size: 20px;
       cursor: pointer;
-      font-size: 18px;
     }
 
-    button.send:disabled {
-      opacity: .45;
-      cursor: not-allowed;
+    button:disabled {
+      opacity: .5;
     }
 
-    .hint {
-      text-align: center;
-      color: #59677a;
-      font-size: 10px;
-      margin-top: 8px;
-    }
-
-    .typing {
-      color: #7e8ca0;
-      font-size: 12px;
-      padding: 4px 0;
+    .debug {
+      margin: 0 20px 10px;
+      padding: 10px;
+      background: #080d14;
+      border: 1px solid #1d2938;
+      border-radius: 10px;
+      color: #718096;
+      font-size: 11px;
+      direction: ltr;
+      text-align: left;
+      white-space: pre-wrap;
+      display: none;
     }
 
     @media (max-width: 600px) {
-      body {
-        padding: 0;
-      }
-
       .app {
         height: 100vh;
-        max-height: none;
-        border-radius: 0;
-        border: 0;
       }
 
-      .messages {
-        padding: 16px;
-      }
-
-      .message {
+      .bubble {
         max-width: 90%;
-      }
-
-      .welcome h1 {
-        font-size: 23px;
-      }
-
-      .header {
-        padding: 14px 16px;
       }
     }
   </style>
@@ -275,248 +167,307 @@
 
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <header class="header">
-      <div class="brand">
-        <div class="logo">AI</div>
-
-        <div>
-          <div class="title">Test Agent</div>
-          <div class="subtitle">Agent testing environment</div>
-        </div>
-      </div>
-
-      <div class="status">
-        <span class="dot"></span>
-        Online
-      </div>
-    </header>
-
-    <main class="messages" id="messages">
-
-      <div class="welcome" id="welcome">
-        <h1>Test your AI Agent</h1>
-
-        <p>
-          Send a message to test how your agent understands
-          business data, answers questions and performs tasks.
-        </p>
-
-        <div class="suggestions">
-          <button class="suggestion"
-            onclick="useSuggestion('Show me the store data')">
-            Show store data
-          </button>
-
-          <button class="suggestion"
-            onclick="useSuggestion('How many products do I have?')">
-            Products
-          </button>
-
-          <button class="suggestion"
-            onclick="useSuggestion('Give me a sales summary')">
-            Sales summary
-          </button>
-        </div>
-      </div>
-
-    </main>
-
-    <div class="composer">
-
-      <div class="input-row">
-
-        <textarea
-          id="input"
-          placeholder="Ask your agent something..."
-          rows="1"
-        ></textarea>
-
-        <button
-          class="send"
-          id="send"
-          onclick="sendMessage()"
-        >
-          ➤
-        </button>
-
-      </div>
-
-      <div class="hint">
-        Enter to send • Shift + Enter for new line
-      </div>
-
+  <header>
+    <div>
+      <div class="title">🤖 Store Agent Test</div>
+      <div class="sub">Real Backend Connection</div>
     </div>
+
+    <div class="status">
+      ● Online
+    </div>
+  </header>
+
+  <main class="messages" id="messages">
+
+    <div class="message agent">
+      <div class="bubble">
+        أهلاً 👋
+
+        أنا الـStore Agent.
+
+        جرّب تسألني:
+        • عندي كام منتج؟
+        • سعر المنتج كام؟
+        • إيه المنتجات المتاحة؟
+        • هل المنتج متوفر؟
+      </div>
+    </div>
+
+  </main>
+
+  <div class="debug" id="debug"></div>
+
+  <div class="composer">
+
+    <textarea
+      id="message"
+      placeholder="اكتب رسالتك..."
+      rows="1"
+    ></textarea>
+
+    <button id="send">➤</button>
 
   </div>
 
+</div>
+
 <script>
 
-  /*
-    IMPORTANT:
-    This is the API endpoint your page will call.
+const API_URL =
+  "/api/agent/chat";
 
-    If your Vercel backend uses another endpoint,
-    change this value.
-  */
+const STORE_ID =
+  "6a784d01-7d04-4737-a3b9-10ef79df0518";
 
-  const API_URL = "/api/agent/chat";
+const messages =
+  document.getElementById("messages");
 
-  const messages = document.getElementById("messages");
-  const input = document.getElementById("input");
-  const send = document.getElementById("send");
-  const welcome = document.getElementById("welcome");
+const input =
+  document.getElementById("message");
 
+const send =
+  document.getElementById("send");
 
-  function useSuggestion(text) {
-    input.value = text;
-    input.focus();
-  }
+const debug =
+  document.getElementById("debug");
 
-
-  function addMessage(text, type) {
-
-    if (welcome) {
-      welcome.remove();
-    }
-
-    const message = document.createElement("div");
-    message.className = `message ${type}`;
-
-    const avatar = document.createElement("div");
-    avatar.className = "avatar";
-    avatar.textContent = type === "user" ? "U" : "AI";
-
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-    bubble.textContent = text;
-
-    message.appendChild(avatar);
-    message.appendChild(bubble);
-
-    messages.appendChild(message);
-
-    messages.scrollTop = messages.scrollHeight;
-  }
+let history = [];
 
 
-  function addTyping() {
+function addMessage(text, type = "agent") {
 
-    const typing = document.createElement("div");
+  const wrapper =
+    document.createElement("div");
 
-    typing.className = "message assistant";
-    typing.id = "typing";
+  wrapper.className =
+    "message " + type;
 
-    typing.innerHTML = `
-      <div class="avatar">AI</div>
-      <div class="typing">Agent is thinking...</div>
-    `;
+  const bubble =
+    document.createElement("div");
 
-    messages.appendChild(typing);
+  bubble.className = "bubble";
 
-    messages.scrollTop = messages.scrollHeight;
-  }
+  bubble.textContent = text;
 
+  wrapper.appendChild(bubble);
 
-  function removeTyping() {
+  messages.appendChild(wrapper);
 
-    const typing = document.getElementById("typing");
-
-    if (typing) {
-      typing.remove();
-    }
-  }
+  messages.scrollTop =
+    messages.scrollHeight;
+}
 
 
-  async function sendMessage() {
+function showDebug(text) {
 
-    const text = input.value.trim();
+  debug.style.display = "block";
 
-    if (!text) return;
+  debug.textContent = text;
 
-    addMessage(text, "user");
+  messages.scrollTop =
+    messages.scrollHeight;
+}
 
-    input.value = "";
-    input.style.height = "48px";
 
-    send.disabled = true;
+async function sendMessage() {
 
-    addTyping();
+  const text =
+    input.value.trim();
 
-    try {
+  if (!text) return;
 
-      const response = await fetch(API_URL, {
+  addMessage(text, "user");
+
+  input.value = "";
+
+  send.disabled = true;
+
+  const loading =
+    document.createElement("div");
+
+  loading.className =
+    "message agent";
+
+  loading.innerHTML =
+    `<div class="bubble">جاري التفكير...</div>`;
+
+  messages.appendChild(loading);
+
+  messages.scrollTop =
+    messages.scrollHeight;
+
+
+  try {
+
+    const response =
+      await fetch(API_URL, {
 
         method: "POST",
 
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Accept": "application/json"
         },
 
         body: JSON.stringify({
-          message: text
+
+          storeId: STORE_ID,
+
+          message: text,
+
+          history: history
+
         })
 
       });
 
 
-      const data = await response.json();
-
-      removeTyping();
-
-
-      if (!response.ok) {
-
-        throw new Error(
-          data.error ||
-          "Agent request failed"
-        );
-
-      }
+    const raw =
+      await response.text();
 
 
-      /*
-        Supports common backend response formats:
-        { reply: "..." }
-        { message: "..." }
-        { response: "..." }
-        { answer: "..." }
-      */
-
-      const reply =
-        data.reply ??
-        data.message ??
-        data.response ??
-        data.answer ??
-        JSON.stringify(data, null, 2);
+    loading.remove();
 
 
-      addMessage(reply, "assistant");
+    console.log(
+      "HTTP STATUS:",
+      response.status
+    );
+
+    console.log(
+      "RAW RESPONSE:",
+      raw
+    );
 
 
-    } catch (error) {
+    let data = null;
 
-      removeTyping();
 
-      addMessage(
-        "❌ Error: " + error.message,
-        "assistant"
+    try {
+
+      data =
+        JSON.parse(raw);
+
+    } catch (parseError) {
+
+      showDebug(
+        "HTTP STATUS: " +
+        response.status +
+        "\n\nRAW RESPONSE:\n" +
+        raw.substring(0, 1000)
       );
 
-    } finally {
-
-      send.disabled = false;
-      input.focus();
-
+      throw new Error(
+        "Backend returned non-JSON response."
+      );
     }
+
+
+    if (!response.ok) {
+
+      showDebug(
+        "HTTP STATUS: " +
+        response.status +
+        "\n\nJSON RESPONSE:\n" +
+        JSON.stringify(
+          data,
+          null,
+          2
+        )
+      );
+
+      throw new Error(
+        data.error ||
+        "Backend request failed."
+      );
+    }
+
+
+    const reply =
+      data.response ||
+      data.message ||
+      data.answer ||
+      "الـAgent لم يرجع response.";
+
+
+    addMessage(
+      reply,
+      "agent"
+    );
+
+
+    history.push({
+
+      role: "user",
+
+      content: text
+
+    });
+
+
+    history.push({
+
+      role: "assistant",
+
+      content: reply
+
+    });
+
+
+    showDebug(
+      "STATUS: " +
+      response.status +
+      "\n\nAGENT RESULT:\n" +
+      JSON.stringify(
+        data,
+        null,
+        2
+      )
+    );
+
+
+  } catch (error) {
+
+    loading.remove();
+
+    addMessage(
+      "❌ " + error.message,
+      "error"
+    );
+
+    console.error(
+      "AGENT ERROR:",
+      error
+    );
+
+  } finally {
+
+    send.disabled = false;
+
+    input.focus();
 
   }
 
+}
 
-  input.addEventListener("keydown", function(event) {
 
-    if (event.key === "Enter" && !event.shiftKey) {
+send.addEventListener(
+  "click",
+  sendMessage
+);
+
+
+input.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey
+    ) {
 
       event.preventDefault();
 
@@ -524,19 +475,27 @@
 
     }
 
-  });
+  }
+);
 
 
-  input.addEventListener("input", function() {
-
-    this.style.height = "48px";
+input.addEventListener(
+  "input",
+  function() {
 
     this.style.height =
-      Math.min(this.scrollHeight, 130) + "px";
+      "50px";
 
-  });
+    this.style.height =
+      Math.min(
+        this.scrollHeight,
+        130
+      ) + "px";
+
+  }
+);
 
 </script>
 
 </body>
-</html>
+  </html>
