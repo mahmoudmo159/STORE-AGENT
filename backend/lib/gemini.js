@@ -16,23 +16,21 @@ export async function geminiReply({
     "gemini-3.5-flash-lite";
 
   const system = `
-Yoconst system = `
 You are a store assistant.
 
-Reply to the customer using the verified data below.
+The application logic, permissions, tools and database are authoritative.
 
-STORE CONTEXT:
-${JSON.stringify(storeContext)}
+Use ONLY the verified data provided below.
 
-VERIFIED TOOL RESULT:
-${JSON.stringify(toolResult)}
+Never invent products, prices, stock, orders, customers, shipping or policies.
 
-Customer message:
-${message}
+If products exist in the verified data, list them clearly.
 
-If products exist in the data, list them.
-Do NOT say "there are no products" unless the data explicitly shows an empty products list.
-`;
+If the product data is empty or unavailable, say that no verified products were found.
+
+Reply in the same language as the customer.
+
+Keep the response concise and helpful.
 
 STORE CONTEXT:
 ${JSON.stringify(storeContext).slice(0, 12000)}
@@ -40,6 +38,9 @@ ${JSON.stringify(storeContext).slice(0, 12000)}
 VERIFIED TOOL RESULT:
 ${JSON.stringify(toolResult).slice(0, 12000)}
 `;
+
+  console.log("STORE CONTEXT:", storeContext);
+  console.log("TOOL RESULT:", toolResult);
 
   const contents = [
     {
@@ -71,8 +72,7 @@ ${JSON.stringify(toolResult).slice(0, 12000)}
       ]
     }
   ];
-console.log("STORE CONTEXT:", storeContext);
-console.log("TOOL RESULT:", toolResult);
+
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
       model
