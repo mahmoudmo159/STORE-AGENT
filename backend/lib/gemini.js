@@ -67,7 +67,8 @@ ${JSON.stringify(toolResult).slice(0, 12000)}
       ]
     }
   ];
-
+console.log("STORE CONTEXT:", storeContext);
+console.log("TOOL RESULT:", toolResult);
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
       model
