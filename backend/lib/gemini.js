@@ -13,7 +13,7 @@ export async function geminiReply({
 
   const model =
     process.env.GEMINI_MODEL ||
-    "gemini-2.5-flash-lite";
+    "gemini-3.5-flash-lite";
 
   const system = `
 You are the language layer of a store agent.
@@ -48,11 +48,7 @@ ${JSON.stringify(toolResult).slice(0, 12000)}
     },
 
     ...history.slice(-10).map((m) => ({
-      role:
-        m.role === "assistant"
-          ? "model"
-          : "user",
-
+      role: m.role === "assistant" ? "model" : "user",
       parts: [
         {
           text: String(m.content || "")
@@ -78,15 +74,12 @@ ${JSON.stringify(toolResult).slice(0, 12000)}
     )}:generateContent`,
     {
       method: "POST",
-
       headers: {
         "Content-Type": "application/json",
         "x-goog-api-key": key
       },
-
       body: JSON.stringify({
         contents,
-
         generationConfig: {
           temperature: 0.2,
           maxOutputTokens: 400
@@ -95,16 +88,11 @@ ${JSON.stringify(toolResult).slice(0, 12000)}
     }
   );
 
-  const raw =
-    await response.text();
+  const raw = await response.text();
 
   if (!response.ok) {
-
     throw new Error(
-      `GEMINI_ERROR_${response.status}: ${raw.slice(
-        0,
-        1000
-      )}`
+      `GEMINI_ERROR_${response.status}: ${raw.slice(0, 1000)}`
     );
   }
 
@@ -113,9 +101,7 @@ ${JSON.stringify(toolResult).slice(0, 12000)}
   try {
     data = JSON.parse(raw);
   } catch {
-    throw new Error(
-      "GEMINI_INVALID_JSON"
-    );
+    throw new Error("GEMINI_INVALID_JSON");
   }
 
   const text =
@@ -125,9 +111,7 @@ ${JSON.stringify(toolResult).slice(0, 12000)}
       .trim();
 
   if (!text) {
-    throw new Error(
-      "GEMINI_EMPTY_RESPONSE"
-    );
+    throw new Error("GEMINI_EMPTY_RESPONSE");
   }
 
   return text;
